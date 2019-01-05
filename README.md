@@ -22,7 +22,7 @@ VALUES
   (2, 1080797681514790915, '韩式婚礼请柬');
 ```
 
-# 大数溢出
+## 大数溢出
 
 数据库有个字段 `video_id`，用的是 `bigint(20)`，有个数据 `1080797681514790912` 超过了 js 的 `MAX_SAFE_INTEGER` 的大小，如果直接取的话，精度会有问题。这时，返回的时候，**需要把这个数据转为字符串**，可以加上 `supportBigNumbers` 和 `bigNumberStrings` 的配置：
 
@@ -36,3 +36,5 @@ const connection = mysql.createConnection({
   bigNumberStrings: true
 })
 ```
+
+bigint 能表示的最大的数是 2^63-1 (9223372036854775807)，bigint 其实已经有长度了，在 MySQL 建表中的 length（比如 demo 中的 20），只是用于显示的位数。而 js 能表示的最大的数是 2^53-1，其实就是 `MAX_SAFE_INTEGER`，所以 bigint 在 js 中是可能溢出的
