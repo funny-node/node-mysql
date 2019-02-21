@@ -54,10 +54,12 @@ google 后给出解决方案（原因可以看下 [这里](https://stackoverflow
 1.  在数据库中将该字段编码改成 utf8mb4（如果还不行，将数据库，表也改了，反正我是只改了字段就 ok 了）
 2. Node 连接数据库的时候给出 charset 选项。以 [mysql](https://github.com/mysqljs/mysql) 为例（其他语言应该也要在连接数据库的时候显示声明 charset）：
 
-        var connection = mysql.createConnection({
-            host     : 'localhost',
-            user     : 'root',
-            password : '12345', // my mac
-            database: 'starskeeper',
-            charset: 'utf8mb4' // 添加这里
-        });
+    ```js
+    var connection = mysql.createConnection({
+      host     : 'localhost',
+      user     : 'root',
+      password : '12345', // my mac
+      database: 'starskeeper',
+      charset: 'utf8mb4' // 添加这里
+    });
+    ```
