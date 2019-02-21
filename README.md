@@ -38,3 +38,26 @@ const connection = mysql.createConnection({
 ```
 
 bigint 能表示的最大的数是 2^63-1 (9223372036854775807)，bigint 其实已经有长度了，在 MySQL 建表中的 length（比如 demo 中的 20），只是用于显示的位数。而 js 能表示的最大的数是 2^53-1，其实就是 `MAX_SAFE_INTEGER`，所以 bigint 在 js 中是可能溢出的
+
+## 插入 TEXT 类型报错问题
+
+由于开发需要存储大量文本（其实是一个结构化对象字符串），考虑到 char 以及 varchar 都不够大，所以打算用 TEXT 类型，顺便记一下 TEXT、MEDIUMTEXT 以及 LONGTEXT 的存储大小：
+
+![](https://images2018.cnblogs.com/blog/675542/201808/675542-20180827220537906-818884208.png)
+
+但是用 Node 连接 MySQL 插入数据库的时候，一直报错如下：
+
+![](https://images2018.cnblogs.com/blog/675542/201808/675542-20180827220524123-305885546.png)
+
+google 后给出解决方案（原因可以看下 [这里](https://stackoverflow.com/questions/10957238/incorrect-string-value-when-trying-to-insert-utf-8-into-mysql-via-jdbc)）：
+
+1.  在数据库中将该字段编码改成 utf8mb4（如果还不行，将数据库，表也改了，反正我是只改了字段就 ok 了）
+2. Node 连接数据库的时候给出 charset 选项。以 [mysql](https://github.com/mysqljs/mysql) 为例（其他语言应该也要在连接数据库的时候显示声明 charset）：
+
+    var connection = mysql.createConnection({
+        host     : 'localhost',
+        user     : 'root',
+        password : '12345', // my mac
+        database: 'starskeeper',
+        charset: 'utf8mb4' // 添加这里
+      });
